@@ -160,3 +160,158 @@ int main()
 }
 ```
 
+### 三、洛谷P1106 删数问题
+
+### 通关代码
+
+```c++
+#include <iostream>
+#include <vector>
+using namespace std;
+int main(void)
+{
+	vector<char> vec;
+	vector<int> zero;
+	int Count = 0;
+	char ch;
+	while ((ch = getchar()) != '\n')
+	{
+		vec.push_back(ch);
+		if (ch == '0')
+		{
+			zero.push_back(Count);//zero中为0开头数组位数
+		}
+		Count++;
+	}
+
+	//1.检测是否有0能消除。有的话一下消除的位数会增多，血赚
+	//2.消除前导零之后前k个选择最优的
+	int k;
+	cin >> k;
+
+	if (k >= vec.size())
+	{
+		cout << 0 << endl;
+		return 0;
+	}
+
+	int k_c = k;
+	int flag = -1;
+	if (zero.size() != 0)
+	{
+		if ((zero[0] + 1) <= k)
+		{
+			for (size_t i = 0; i < vec.size(); i++)
+			{
+				if (vec[i] == '0')
+				{
+					flag++;
+				}
+				else
+				{
+					k_c--;
+				}
+				if (k_c == 0)
+				{
+					break;
+				}
+			}
+		}
+	}
+	if (flag != -1)
+	{
+		k -= (zero[flag] - flag);
+		vec.erase(vec.begin(), vec.begin() + zero[flag] + 1);
+	}
+
+	//for (size_t i = 0; i < vec.size(); i++)
+	//{
+	//	cout << vec[i];
+	//}cout << "qwq" << k << endl;
+
+
+
+	int awa = 0;//已经取得的位数
+	while (k > 0)
+	{
+		char min = ':';
+		int q = 0;
+		for (size_t i = awa; i <= k + awa; i++)
+		{
+			/*cout << vec[i] << "***" << endl;*/
+			if (vec[i] < min)
+			{
+				q = i;//q是最小值所在位置(数组)
+				min = vec[i];
+			}
+		}
+		//找到后k个数中最小的当下一位
+		/*cout << q << ")))" << vec[q] << endl;
+		cout << "awa" << awa << endl;*/
+		if (q != awa)
+		{
+			k -= (q - awa);
+			vec.erase(vec.begin() + awa, vec.begin() + q);
+		}
+
+		awa++;
+	}
+	//int awa = 0;
+	//while (k > 0)
+	//{
+	//	char min = '9';
+	//	int q = 0;
+	//	for (size_t i = awa; i <= k; i++)
+	//	{
+	//		if (vec[i] <= min)
+	//		{
+	//			q = i;
+	//			min = vec[i];
+	//		}
+	//	}
+	//	if (q != awa)
+	//	{
+	//		k -= q;
+	//		vec.erase(vec.begin() + awa, vec.begin() + awa + q);
+	//	}
+	//	if (vec[awa] == '0')
+	//	{
+	//		int size = awa;
+	//		for (size_t j = 1; j < vec.size(); j++)
+	//		{
+	//			if (vec[j] == '0')
+	//			{
+	//				size++;
+	//			}
+	//			else
+	//			{
+	//				break;
+	//			}
+	//		}
+	//		vec.erase(vec.begin() + awa, vec.begin() + size + awa);
+	//	}
+	//	awa++;
+	//}
+	if (vec.size() == 0)
+	{
+		cout << 0 << endl;
+		return 0;
+	}
+	for (size_t i = 0; i < vec.size(); i++)
+	{
+		if (vec[0] == 0)
+		{
+			continue;
+		}
+		if (vec[i] == 0 && vec[i - 1] == 0 && i != 0)
+		{
+			continue;
+		}
+		cout << vec[i];
+	}cout << endl;
+	//除去前导0并输出
+	return 0;
+}
+```
+
+写的比较麻烦，但是个人觉得收获很大。
